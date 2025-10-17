@@ -5,17 +5,20 @@ import core.basesyntax.service.ReportGenerator;
 import java.util.Map;
 
 public class ReportGeneratorImpl implements ReportGenerator {
-    private static final String REPORT_HEADER = "fruits,quantity";
+    private static final String REPORT_HEADER = "fruit,quantity";
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String WORD_SEPARATOR = ",";
     private final StorageDao storageDao;
 
     public ReportGeneratorImpl(StorageDao storageDao) {
+        if (storageDao == null) {
+            throw new RuntimeException("Cannot access to storage dao: parameter is null");
+        }
         this.storageDao = storageDao;
     }
 
     @Override
-    public String generateReport() {
+    public String getReport() {
         StringBuilder report = new StringBuilder(REPORT_HEADER);
         report.append(LINE_SEPARATOR);
         for (Map.Entry<String, Integer> entry : storageDao.getAllFruitsQuantities().entrySet()) {

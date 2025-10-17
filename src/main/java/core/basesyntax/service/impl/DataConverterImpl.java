@@ -6,12 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataConverterImpl implements DataConverter {
+    private static final String HEADER_FORMAT = "type,fruit,quantity";
 
     @Override
-    public List<FruitTransaction> convertStringsToTransactionsList(List<String> lines) {
-        if (lines == null) {
-            throw new NullPointerException("Input parameter cannot be null");
+    public List<FruitTransaction> convertToTransaction(List<String> lines) {
+        if (lines == null || lines.isEmpty()) {
+            throw new RuntimeException("Input parameter cannot be null or empty");
         }
+        //header check
+        String header = lines.get(0);
+        if (!header.equals(HEADER_FORMAT)) {
+            throw new RuntimeException("Invalid file header. "
+                    + "Expected 'type,fruit,quantity' but found: " + lines.get(0));
+        }
+
         List<FruitTransaction> fruitTransactions = new ArrayList<>();
         for (int i = 1; i < lines.size(); i++) {
             String currentLine = lines.get(i).trim();
@@ -24,23 +32,26 @@ public class DataConverterImpl implements DataConverter {
     }
 
     private FruitTransaction parseLineToTransaction(String line) {
+
         String[] parts = line.split(",");
+        //type/fruit/quantity validation
         if (parts.length != 3) {
-            throw new RuntimeException("Input line is invalid: has more than 3 parts");
+            throw new RuntimeException("Invalid line format. Expected 3 columns but found: "
+                    + parts.length);
         }
-        String operationCode = parts[0].trim();
-        String fruitName = parts[1].trim();
-        int quantity;
-        try {
-            quantity = Integer.parseInt(parts[2].trim());
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Input line is invalid: quantity part is invalid");
-        }
-        FruitTransaction.Operation operation = getOperationByCode(operationCode);
+
+        ////get correct operation using helper method
+        FruitTransaction.Operation operation = getOperationByCode(parts[0]);
+        //get correct fruitName using helper method
+        String fruitName = parseFruitName(parts[1]);
+        //get correct quantity using helper method
+        int quantity = parseQuantity(parts[2]);
+
         return new FruitTransaction(operation, fruitName, quantity);
     }
 
     private FruitTransaction.Operation getOperationByCode(String operationCode) {
+        String code = operationCode.trim();
         for (FruitTransaction.Operation operation : FruitTransaction.Operation.values()) {
             if (operation.getCode().equals(operationCode)) {
                 return operation;
@@ -49,4 +60,24 @@ public class DataConverterImpl implements DataConverter {
         throw new RuntimeException("Input line is invalid: unknown operation code");
     }
 
+    private String parseFruitName(String fruitName) {
+        String fruit = fruitName.trim();
+        if (fruit.isEmpty()) {
+            throw new RuntimeException("Input line is invalid: fruit name should not be empty");
+        }
+        return fruit;
+    }
+
+    private int parseQuantity(String quantityString) {
+        int quantity;
+        try {
+            quantity = Integer.parseInt(quantityString.trim());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Input line is invalid: quantity part is invalid");
+        }
+        if (quantity < 0) {
+            throw new RuntimeException("Input line is invalid: quantity should not be negative");
+        }
+        return quantity;
+    }
 }

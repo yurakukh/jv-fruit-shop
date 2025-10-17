@@ -4,13 +4,13 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.impl.StorageDaoImpl;
 import core.basesyntax.model.FruitTransaction;
 import core.basesyntax.service.DataConverter;
-import core.basesyntax.service.FileReaderService;
-import core.basesyntax.service.FileWriterService;
+import core.basesyntax.service.FileReader;
+import core.basesyntax.service.FileWriter;
 import core.basesyntax.service.ReportGenerator;
 import core.basesyntax.service.ShopService;
 import core.basesyntax.service.impl.DataConverterImpl;
-import core.basesyntax.service.impl.FileReaderServiceImpl;
-import core.basesyntax.service.impl.FileWriterServiceImpl;
+import core.basesyntax.service.impl.FileReaderImpl;
+import core.basesyntax.service.impl.FileWriterImpl;
 import core.basesyntax.service.impl.ReportGeneratorImpl;
 import core.basesyntax.service.impl.ShopServiceImpl;
 import core.basesyntax.strategy.OperationHandler;
@@ -29,35 +29,34 @@ public class Main {
     private static final String FILE_TO_WRITE = "src/main/resources/finalReport.csv";
 
     public static void main(String[] args) {
-        //read data from file
-        FileReaderService fileReaderService = new FileReaderServiceImpl();
-        List<String> fileContent = fileReaderService.readFile(FILE_TO_READ);
+        //read CSV file
+        FileReader fileReader = new FileReaderImpl();
+        List<String> fileContent = fileReader.read(FILE_TO_READ);
 
-        //create StorageDao to pass it to all handlers
+        //setup storage and handlers
         StorageDao storageDao = new StorageDaoImpl();
-
         Map<FruitTransaction.Operation, OperationHandler> handlers = new HashMap<>();
         handlers.put(FruitTransaction.Operation.BALANCE, new BalanceOperationHandler(storageDao));
         handlers.put(FruitTransaction.Operation.SUPPLY, new SupplyOperationHandler(storageDao));
         handlers.put(FruitTransaction.Operation.PURCHASE, new PurchaseOperationHandler(storageDao));
         handlers.put(FruitTransaction.Operation.RETURN, new ReturnOperationHandler(storageDao));
 
-        //get FruitTransaction List from Strings List
+        //convert lines to transactions
         DataConverter dataConverter = new DataConverterImpl();
         List<FruitTransaction> transactions =
-                dataConverter.convertStringsToTransactionsList(fileContent);
-        //handle all transactions using strategy
+                dataConverter.convertToTransaction(fileContent);
+
+        //process transactions
         OperationStrategy operationStrategy = new OperationStrategyImpl(handlers);
         ShopService shopService = new ShopServiceImpl(operationStrategy);
-        shopService.processTransaction(transactions);
+        shopService.process(transactions);
 
         //generate report
         ReportGenerator reportGenerator = new ReportGeneratorImpl(storageDao);
-        String finalReport = reportGenerator.generateReport();
+        String finalReport = reportGenerator.getReport();
 
-        //write report to file
-        FileWriterService fileWriterService = new FileWriterServiceImpl();
-        fileWriterService.writeToFile(FILE_TO_WRITE, finalReport);
-
+        //write report to CSV file
+        FileWriter fileWriter = new FileWriterImpl();
+        fileWriter.write(FILE_TO_WRITE, finalReport);
     }
 }

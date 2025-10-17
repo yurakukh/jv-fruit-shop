@@ -17,7 +17,7 @@ public class OperationStrategyImpl implements OperationStrategy {
     }
 
     @Override
-    public void processTransaction(FruitTransaction fruitTransaction) {
+    public void process(FruitTransaction fruitTransaction) {
         OperationHandler operationHandler =
                 operationHandlers.get(fruitTransaction.getOperation());
         if (operationHandler == null) {

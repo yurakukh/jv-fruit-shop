@@ -1,21 +1,20 @@
 package core.basesyntax.service.impl;
 
-import core.basesyntax.service.FileReaderService;
+import core.basesyntax.service.FileReader;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileReaderServiceImpl implements FileReaderService {
+public class FileReaderImpl implements FileReader {
 
     @Override
-    public List<String> readFile(String fileName) {
+    public List<String> read(String fileName) {
         if (fileName == null) {
             throw new RuntimeException("Unable to read file: FileName should not be null");
         }
         List<String> linesFromFile = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new java.io.FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 linesFromFile.add(line);

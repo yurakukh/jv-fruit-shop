@@ -16,12 +16,12 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public void processTransaction(List<FruitTransaction> transactions) {
+    public void process(List<FruitTransaction> transactions) {
         if (transactions == null) {
             throw new RuntimeException("Transactions list cannot be null");
         }
         for (FruitTransaction fruitTransaction : transactions) {
-            operationStrategy.processTransaction(fruitTransaction);
+            operationStrategy.process(fruitTransaction);
         }
     }
 }

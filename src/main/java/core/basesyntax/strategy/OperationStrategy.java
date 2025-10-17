@@ -3,5 +3,5 @@ package core.basesyntax.strategy;
 import core.basesyntax.model.FruitTransaction;
 
 public interface OperationStrategy {
-    void processTransaction(FruitTransaction fruitTransaction);
+    void process(FruitTransaction fruitTransaction);
 }
