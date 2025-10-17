@@ -11,6 +11,9 @@ public class FileReaderServiceImpl implements FileReaderService {
 
     @Override
     public List<String> readFile(String fileName) {
+        if (fileName == null) {
+            throw new RuntimeException("Unable to read file: FileName should not be null");
+        }
         List<String> linesFromFile = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;

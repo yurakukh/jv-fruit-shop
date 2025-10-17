@@ -9,6 +9,9 @@ public class ShopServiceImpl implements ShopService {
     private final OperationStrategy operationStrategy;
 
     public ShopServiceImpl(OperationStrategy operationStrategy) {
+        if (operationStrategy == null) {
+            throw new RuntimeException("Unable to create shop service: operationStrategy is null");
+        }
         this.operationStrategy = operationStrategy;
     }
 

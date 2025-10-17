@@ -24,14 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Feel free to remove this class and create your own.
- */
-public class HelloWorld {
+public class Main {
+    private static final String FILE_TO_READ = "src/main/resources/dailyActivities.csv";
+    private static final String FILE_TO_WRITE = "src/main/resources/finalReport.csv";
+
     public static void main(String[] args) {
         //read data from file
         FileReaderService fileReaderService = new FileReaderServiceImpl();
-        List<String> fileContent = fileReaderService.readFile("dailyActivities.csv");
+        List<String> fileContent = fileReaderService.readFile(FILE_TO_READ);
 
         //create StorageDao to pass it to all handlers
         StorageDao storageDao = new StorageDaoImpl();
@@ -57,7 +57,7 @@ public class HelloWorld {
 
         //write report to file
         FileWriterService fileWriterService = new FileWriterServiceImpl();
-        fileWriterService.writeToFile("finalReport.csv", finalReport);
+        fileWriterService.writeToFile(FILE_TO_WRITE, finalReport);
 
     }
 }

@@ -5,7 +5,7 @@ import core.basesyntax.service.ReportGenerator;
 import java.util.Map;
 
 public class ReportGeneratorImpl implements ReportGenerator {
-    private static final String REPORT_HEADER = "fruits, quantity";
+    private static final String REPORT_HEADER = "fruits,quantity";
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String WORD_SEPARATOR = ",";
     private final StorageDao storageDao;

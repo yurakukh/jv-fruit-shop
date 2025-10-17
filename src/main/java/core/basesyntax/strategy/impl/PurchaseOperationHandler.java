@@ -8,6 +8,9 @@ public class PurchaseOperationHandler implements OperationHandler {
     private final StorageDao storageDao;
 
     public PurchaseOperationHandler(StorageDao storageDao) {
+        if (storageDao == null) {
+            throw new RuntimeException("Cannot access to storage dao: parameter is null");
+        }
         this.storageDao = storageDao;
     }
 

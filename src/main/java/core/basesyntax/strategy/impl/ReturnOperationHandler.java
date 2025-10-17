@@ -8,6 +8,9 @@ public class ReturnOperationHandler implements OperationHandler {
     private final StorageDao storageDao;
 
     public ReturnOperationHandler(StorageDao storageDao) {
+        if (storageDao == null) {
+            throw new RuntimeException("Cannot access to storage dao: parameter is null");
+        }
         this.storageDao = storageDao;
     }
 
