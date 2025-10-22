@@ -36,7 +36,7 @@ public class DataConverterImpl implements DataConverter {
         String[] parts = line.split(",");
         //type/fruit/quantity validation
         if (parts.length != 3) {
-            throw new RuntimeException("Invalid line format. Expected 3 columns but found: "
+            throw new RuntimeException("Invalid line format. Expected 3 columns, found: "
                     + parts.length);
         }
 
