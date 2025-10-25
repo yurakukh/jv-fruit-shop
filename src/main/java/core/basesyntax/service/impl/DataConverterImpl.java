@@ -13,7 +13,6 @@ public class DataConverterImpl implements DataConverter {
         if (lines == null || lines.isEmpty()) {
             throw new RuntimeException("Input parameter cannot be null or empty");
         }
-        //header check
         String header = lines.get(0);
         if (!header.equals(HEADER_FORMAT)) {
             throw new RuntimeException("Invalid file header. "
@@ -34,27 +33,23 @@ public class DataConverterImpl implements DataConverter {
     private FruitTransaction parseLineToTransaction(String line) {
 
         String[] parts = line.split(",");
-        //type/fruit/quantity validation
         if (parts.length != 3) {
             throw new RuntimeException("Invalid line format. Expected 3 columns, found: "
                     + parts.length);
         }
-
-        ////get correct operation using helper method
         FruitTransaction.Operation operation = getOperationByCode(parts[0]);
-        //get correct fruitName using helper method
         String fruitName = parseFruitName(parts[1]);
-        //get correct quantity using helper method
         int quantity = parseQuantity(parts[2]);
-
         return new FruitTransaction(operation, fruitName, quantity);
     }
 
     private FruitTransaction.Operation getOperationByCode(String operationCode) {
         String code = operationCode.trim();
-        for (FruitTransaction.Operation operation : FruitTransaction.Operation.values()) {
-            if (operation.getCode().equals(operationCode)) {
-                return operation;
+        if (FruitTransaction.Operation.isCodeExists(code)) {
+            for (FruitTransaction.Operation operation : FruitTransaction.Operation.values()) {
+                if (operation.getCode().equals(code)) {
+                    return operation;
+                }
             }
         }
         throw new RuntimeException("Input line is invalid: unknown operation code");

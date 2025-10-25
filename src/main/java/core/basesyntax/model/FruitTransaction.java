@@ -1,20 +1,13 @@
 package core.basesyntax.model;
 
+import java.util.Arrays;
+
 public class FruitTransaction {
     private final Operation operation;
     private final String fruit;
     private final int quantity;
 
     public FruitTransaction(Operation operation, String fruit, int quantity) {
-        if (operation == null) {
-            throw new IllegalArgumentException("Operation cannot be null");
-        }
-        if (fruit == null) {
-            throw new IllegalArgumentException("Fruit cannot be null");
-        }
-        if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
-        }
         this.operation = operation;
         this.fruit = fruit;
         this.quantity = quantity;
@@ -55,6 +48,14 @@ public class FruitTransaction {
 
         public String getCode() {
             return code;
+        }
+
+        public static boolean isCodeExists(String code) {
+            if (code == null) {
+                return false;
+            }
+            return Arrays.stream(Operation.values())
+                    .anyMatch(operation -> operation.getCode().equals(code));
         }
     }
 }
