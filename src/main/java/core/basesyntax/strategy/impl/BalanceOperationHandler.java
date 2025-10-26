@@ -21,6 +21,6 @@ public class BalanceOperationHandler implements OperationHandler {
         if (quantity < 0) {
             throw new RuntimeException("Quantity cannot be negative");
         }
-        storageDao.addFruitQuantity(fruit, quantity);
+        storageDao.setFruitQuantity(fruit, quantity);
     }
 }

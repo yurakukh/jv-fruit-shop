@@ -68,7 +68,7 @@ public class DataConverterImpl implements DataConverter {
         try {
             quantity = Integer.parseInt(quantityString.trim());
         } catch (NumberFormatException e) {
-            throw new RuntimeException("Input line is invalid: quantity part is invalid");
+            throw new RuntimeException("Input line is invalid: quantity part is invalid", e);
         }
         if (quantity < 0) {
             throw new RuntimeException("Input line is invalid: quantity should not be negative");
